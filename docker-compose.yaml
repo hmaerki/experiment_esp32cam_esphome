@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  esphome:
+    image: ghcr.io/esphome/esphome
+    volumes:
+      - ./esphome:/config:rw
+      # Use local time for logging timestamps
+      - /etc/localtime:/etc/localtime:ro
+    devices:
+      # if needed, add esp device(s) as in command line examples above
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      # - /dev/ttyACM0:/dev/ttyACM0
+    network_mode: host
+    restart: always
+    

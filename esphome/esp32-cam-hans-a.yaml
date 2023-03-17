@@ -1,0 +1,117 @@
+esphome:
+  name: esp32-cam-hans-a
+  friendly_name: esp_cam_hans_a
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "Mi+Uk9cfPEfnQdS+CFyD+EL7xhDHbC/Oy5HT3NSRLyo="
+
+ota:
+  password: "9599ade2d0b2bda3571ccd630716bf7c"
+
+wifi:
+  networks:
+    - ssid: !secret wifi_ssid_mi
+      password: !secret wifi_password_mi
+    # - ssid: !secret wifi_ssid_tumbes
+    #   password: !secret wifi_password_tumbes
+
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Esp-Cam-Hans-A Fallback Hotspot"
+    password: "IhlWKBUOgk53"
+
+web_server:
+  port: 80
+
+esp32_camera_web_server:
+  - port: 8080
+    mode: stream
+  - port: 8081
+    mode: snapshot
+
+captive_portal:
+
+# Example configuration entry
+esp32_camera:
+  name: Cam Hans A
+  test_pattern: False
+
+  external_clock:
+    pin: GPIO0
+    frequency: 20MHz
+    # frequency: 10MHz
+  i2c_pins:
+    sda: GPIO26
+    scl: GPIO27
+  data_pins: [GPIO5, GPIO18, GPIO19, GPIO21, GPIO36, GPIO39, GPIO34,
+GPIO35]
+  vsync_pin: GPIO25
+  href_pin: GPIO23
+  pixel_clock_pin: GPIO22
+  power_down_pin: GPIO32
+  # https://de.wikipedia.org/wiki/Bildaufl%C3%B6sung
+  # resolution: QQVGA # 160X120  
+  # resolution: QCIF # 176X144  
+  # resolution: HQVGA # 240X176  
+  # resolution: QVGA # 320X240  
+  # resolution: CIF # 400X296  
+  # resolution: VGA # 640X480  
+  # resolution: SVGA # 800X600  
+  resolution: XGA # 1024X768  
+  # resolution: SXGA # 1280X1024  
+  # resolution: UXGA # 1600X1200
+
+  # Image settings
+  jpeg_quality: 10
+  vertical_flip: False
+  horizontal_mirror: False
+  max_framerate: 2 fps
+  idle_framerate: 0.03 fps
+  # (Optional, int): The contrast to apply to the picture, from -2 to 2. Defaults to 0.
+  contrast: 0
+  # (Optional, int): The brightness to apply to the picture, from -2 to 2. Defaults to 0.
+  brightness: 0
+  # (Optional, enum): The mode of gain control module. Defaults to auto (leave camera to automatically adjust sensor gain).
+  # manual: Gain can be manually set, with agc_value parameter. agc_gain_ceiling has no effect here
+  # auto: Camera manage sensor gain automatically. Maximum gain can be defined, thanks to agc_gain_ceiling parameter. agc_value has no effect here
+  agc_mode: manual
+  # (Optional, int): The gain value to apply to the picture (when aec_mode is set to manual), from 0 to 30. Defaults to 0.
+  agc_value: 0
+  # (Optional, enum): The maximum gain allowed, when agc_mode is set to auto. This parameter seems act as “ISO” setting. Defaults to 2x.
+  # 2x: Camera is less sensitive, picture is clean (without visible noise)
+  # 4x
+  # 8x
+  # 16x
+  # 32x
+  # 64x
+  # 128x: Camera is more sensitive, but picture contain lot of noise
+  agc_gain_ceiling: 2x
+
+
+# Flashlight
+output:
+  - platform: gpio
+    pin: GPIO4
+    id: gpio_4
+
+## GPIO_4 is the flash light pin
+light:
+  - platform: binary
+    output: gpio_4
+    name: flashlight
+
+switch:
+  - platform: gpio
+    pin: GPIO14
+    name: "Test"
